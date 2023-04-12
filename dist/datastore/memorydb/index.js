@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InMemoryDatastore = void 0;
-class InMemoryDatastore {
+exports.InMemoryDataStore = void 0;
+class InMemoryDataStore {
     constructor() {
         this.users = [];
         this.posts = [];
@@ -57,4 +57,4 @@ class InMemoryDatastore {
         return Promise.resolve();
     }
 }
-exports.InMemoryDatastore = InMemoryDatastore;
+exports.InMemoryDataStore = InMemoryDataStore;

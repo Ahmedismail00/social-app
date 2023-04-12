@@ -2,8 +2,12 @@ import express,{RequestHandler,ErrorRequestHandler} from 'express';
 import asyncHandler from 'express-async-handler'
 
 import {listPostsHandler,createPostHandler,getPostHandler,deletePostHandler} from './handlers/postHandler'
+import {initDb} from './datastore'
 
-const app = express();
+(async ()=>{
+  await initDb();
+  
+  const app = express();
 
 app.use(express.json());
 
@@ -30,3 +34,5 @@ const errHandler : ErrorRequestHandler = (err, req, res, next) => {
 
 app.listen(3000);
 
+
+})
