@@ -5,7 +5,7 @@ import {listPostsHandler,createPostHandler,getPostHandler,deletePostHandler} fro
 import {initDb} from './datastore'
 
 (async ()=>{
-  await initDb();
+  await initDb('/datastore/sql/codersquare.sqlite')
   
   const app = express();
 
@@ -13,7 +13,7 @@ app.use(express.json());
 
 const requestLoggerMiddleware: RequestHandler = 
   (req, res, next) =>{
-    console.log('New Request', req.path , '- body:', req.body);
+    console.log('New Request', req.path , '- body:', req.body)
     next();
   }
   

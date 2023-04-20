@@ -1,22 +1,32 @@
-import {open as sqliteOpen} from "sqlite";
-import sqlite3 from "sqlite3";
+import { Database, open as sqliteOpen } from 'sqlite';
+import sqlite3 from 'sqlite3';
 import path from "path";
 import {DataStore} from "..";
 import {User, Post, Like, Comment} from "../../types";
 
 export class SqlDataStore implements DataStore{
-  public async openDb() {
-    // open the db
-    const db = await sqliteOpen({
-      filename: path.join(__dirname,'codersquare.sqlite'),
-      driver: sqlite3.Database
-      })
+  private db!: Database<sqlite3.Database, sqlite3.Statement>;
+
+  public async openDb(dbPath: string) {
+    // open the database
+    try {
+      this.db = await sqliteOpen({
+        filename: dbPath,
+        driver: sqlite3.Database,
+        mode: sqlite3.OPEN_READWRITE,
+      });
       
-      await db.migrate({
-        migrationsPath: path.join(__dirname,'migrations')
-      })
-      return this;
+      await this.db.migrate({
+      migrationsPath: path.join(__dirname, 'migrations'),
+    });
+    
+    } catch (e) {
+      
+      process.exit(1);
+    }
   }
+  
+  
   
   private users: User[] = [];
   private posts: Post[] = [];

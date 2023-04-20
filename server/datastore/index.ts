@@ -8,10 +8,9 @@ import {SqlDataStore} from './sql'
 export interface DataStore extends UserDao, PostDao, LikeDao, CommentDao{}
 
 // Decleration
-export let db:DataStore;
+export let db:any;
 
 // Initialization
-export async function initDb(){
-  // db = new InMemoryDataStore();
-  db = await new SqlDataStore().openDb;
+export async function initDb(dbPath: string) {
+  db = await new SqlDataStore().openDb(dbPath);
 }
