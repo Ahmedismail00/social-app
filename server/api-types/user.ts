@@ -1,16 +1,14 @@
 import {User} from '../types'; 
 
-// User APIs
+// User APIs  
 
-export interface CreateUserRequest extends User{}  
+export type SignUpRequest = Pick<User, 'userName'| 'email'| 'password'>
+export interface SignUpResponse{}
 
-// export type CreateUserRequest = Pick<User, 'userName'| 'email'| 'password'>
-export interface CreateUserResponse{}
-
-export type GetUserByUsernameRequest = Pick<User, 'userName'>
-export interface GetUserByUsernameResponse{user: User}
-
-export type GetUserByEmailRequest = Pick<User, 'email'>
-export interface GetUserByEmailResponse{
-  user: User
+// export type SignInRequest = Pick<User, 'userName'>
+export interface SignInRequest{
+  login: string; // username or password
+  password: string
 }
+
+export type SignInResponse = Pick<User, 'email'|'userName'|'id'>

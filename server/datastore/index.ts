@@ -9,9 +9,10 @@ import {MysqlDataStore} from './mysql'
 export interface DataStore extends UserDao, PostDao, LikeDao, CommentDao{}
 
 // Decleration
-export let db:any;
+export let db:DataStore;
 
 // Initialization
-export async function initDb(dbPath:string) {
-  db = await new SqlDataStore().openDb(dbPath);
+export async function initDb(dbPath?:string) {
+  // db = await new SqlDataStore().openDb(dbPath);
+  db = await new InMemoryDataStore();
 }

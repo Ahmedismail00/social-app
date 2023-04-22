@@ -15,9 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const postHandler_1 = require("./handlers/postHandler");
+const userHandler_1 = require("./handlers/userHandler");
 const datastore_1 = require("./datastore");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, datastore_1.initDb)('datastore/sql/codersquare.sqlite');
+    yield (0, datastore_1.initDb)();
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     const requestLoggerMiddleware = (req, res, next) => {
@@ -25,14 +26,16 @@ const datastore_1 = require("./datastore");
         next();
     };
     app.use(requestLoggerMiddleware);
-    app.get('/posts', (0, express_async_handler_1.default)(postHandler_1.listPostsHandler));
-    app.get('/post', (0, express_async_handler_1.default)(postHandler_1.getPostHandler));
-    app.post('/post', (0, express_async_handler_1.default)(postHandler_1.createPostHandler));
-    app.post('/delete-post', (0, express_async_handler_1.default)(postHandler_1.deletePostHandler));
+    app.get('/v1/posts', (0, express_async_handler_1.default)(postHandler_1.listPostsHandler));
+    app.get('/v1/post', (0, express_async_handler_1.default)(postHandler_1.getPostHandler));
+    app.post('/v1/post', (0, express_async_handler_1.default)(postHandler_1.createPostHandler));
+    app.post('/v1/delete-post', (0, express_async_handler_1.default)(postHandler_1.deletePostHandler));
+    app.post('/v1/signup', (0, express_async_handler_1.default)(userHandler_1.signUpHandler));
+    app.post('/v1/signin', (0, express_async_handler_1.default)(userHandler_1.signInHandler));
     const errHandler = (err, req, res, next) => {
         console.error('Uncaught exception: ', err);
         return res.status(500).send('Ops, an unexpected error ocured, please try again!');
     };
     app.use(errHandler);
     app.listen(3000);
-}));
+}))();

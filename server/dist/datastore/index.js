@@ -10,11 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initDb = exports.db = void 0;
-const sql_1 = require("./sql");
+const memorydb_1 = require("./memorydb");
 // Initialization
 function initDb(dbPath) {
     return __awaiter(this, void 0, void 0, function* () {
-        exports.db = yield new sql_1.SqlDataStore().openDb(dbPath);
+        // db = await new SqlDataStore().openDb(dbPath);
+        exports.db = yield new memorydb_1.InMemoryDataStore();
     });
 }
 exports.initDb = initDb;

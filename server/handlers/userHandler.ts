@@ -1,41 +1,44 @@
 import {db} from '../datastore';
 import {User,ExpressHandler} from '../types';
 import crypto from 'crypto'
-import {CreateUserRequest,CreateUserResponse,GetUserByEmailRequest,GetUserByEmailResponse,GetUserByUsernameRequest,GetUserByUsernameResponse} from '../api-types/user';
+import {SignUpRequest,SignUpResponse,SignInRequest,SignInResponse} from '../api-types/user';
 
-export const createUserHandler: ExpressHandler<CreateUserRequest,CreateUserResponse> = async(req,res) => {
+export const signUpHandler: ExpressHandler<SignUpRequest,SignUpResponse> = async(req,res) => {
   
-  if(!req.body.userName || !req.body.email || !req.body.password){
-    return res.sendStatus(400);
+  const {email,userName,password} = req.body
+  if(!email || !userName || !password){
+    return res.sendStatus(400).send('All fields are required');
   }
   
+  const existing = await db.getUserByEmail(email) || await db.getUserByUsername(userName)
+  if(!existing){
+    return res.status(403).send('User already exists')
+  }
   const user: User = {
     id : crypto.randomUUID(),
-    userName: req.body.userName,
-    email : req.body.email,
-    password : req.body.password,
+    userName: userName,
+    email : email,
+    password : password,
   }
   
   await db.createUser(user)
-  res.sendStatus(200);
+  return res.sendStatus(200);
 }
 
-export const GetUserByUsernameHandler: ExpressHandler<GetUserByUsernameRequest,GetUserByUsernameResponse> = async (req,res) => {
-  
-  if(!req.query.id){
+export const signInHandler: ExpressHandler<SignInRequest,SignInResponse> = async (req,res) => {
+  const {login, password} = req.body
+  if(!login || !password){
     return res.sendStatus(400);
   }
+  const existing = (await db.getUserByEmail(login)) || (await db.getUserByUsername(login))
   
-  await db.getUserByUsername(req.query.id)
-  res.sendStatus(200);
-}
-
-export const GetUserByEmailHandler: ExpressHandler<GetUserByEmailRequest,GetUserByEmailResponse> = async (req,res) => {
-  
-  if(!req.query.email){
-    return res.sendStatus(400);
+  if (!existing || existing.password != password){
+    return res.status(403)
   }
   
-  await db.getUserByEmail(req.query.email)
-  res.sendStatus(200);
+  return res.send({
+    email: existing.email,
+    userName: existing.userName,
+    id: existing.id,
+  })
 }

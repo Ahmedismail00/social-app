@@ -29,15 +29,20 @@ export class SqlDataStore implements DataStore{
   private comments: Comment[] = [];
   private likes: Like[] = [];
   
-  createUser(user: User): Promise<void>{
-    this.users.push(user);
-    return Promise.resolve();
-  };
+  async createUser(user: User): Promise<void>{
+    await this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`,
+      user.id,
+      user.email,
+      user.password,
+      user.userName
+    );
+  }
+    
   getUserByEmail(email: string): Promise<User | undefined>{
-    return Promise.resolve(this.users.find(u => u.email === email))
+    return this.db.get<User>(`SELECT * FROM users WHERE users.email = ?` , email)
   }
   getUserByUsername(userName: string): Promise<User | undefined>{
-    return Promise.resolve(this.users.find(u => u.userName === userName))
+    return this.db.get<User>(`SELECT * FROM users WHERE users.username = ?` , userName)
   }
   
   listPosts(): Promise<Post[]>{

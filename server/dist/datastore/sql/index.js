@@ -39,15 +39,15 @@ class SqlDataStore {
         });
     }
     createUser(user) {
-        this.users.push(user);
-        return Promise.resolve();
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`, user.id, user.email, user.password, user.userName);
+        });
     }
-    ;
     getUserByEmail(email) {
-        return Promise.resolve(this.users.find(u => u.email === email));
+        return this.db.get(`SELECT * FROM users WHERE users.email = ?`, email);
     }
     getUserByUsername(userName) {
-        return Promise.resolve(this.users.find(u => u.userName === userName));
+        return this.db.get(`SELECT * FROM users WHERE users.username = ?`, userName);
     }
     listPosts() {
         return this.db.all('SELECT * FROM posts');
