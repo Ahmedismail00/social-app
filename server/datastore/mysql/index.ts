@@ -1,28 +1,27 @@
-import { Database, open as sqliteOpen } from 'sqlite';
-import sqlite3 from 'sqlite3';
-import path from "path";
+import {OkPacket, RowDataPacket} from "mysql2";
+import mysql from "mysql2";
 import {DataStore} from "..";
 import {User, Post, Like, Comment} from "../../types";
 
-export class SqlDataStore implements DataStore{
-  private db!: Database<sqlite3.Database, sqlite3.Statement>;
+export class MysqlDataStore implements DataStore{
+  private db!:any;
 
-  public async openDb(dbPath: string) {
-    // open the database
-      this.db = await sqliteOpen({
-        filename: dbPath,
-        driver: sqlite3.Database,
-        mode: sqlite3.OPEN_READWRITE,
-      });
-    
-      this.db.run('PRAGMA foreign_keys = ON;');
-        
-      await this.db.migrate({
-      migrationsPath: path.join(__dirname, 'migrations'),
+  public async openDb() {
+    // const mysql = require('mysql');
+    this.db = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '123456',
+      database: 'codersquare'
     });
-    
-    return this;
+   
+    this.db.connect((err:any) => {
+      if (err) throw err;
+      console.log('Connected to MySQL Server!');
+    });
   }
+  
+  
   
   private users: User[] = [];
   private posts: Post[] = [];
@@ -41,10 +40,18 @@ export class SqlDataStore implements DataStore{
   }
   
   listPosts(): Promise<Post[]>{
-    return this.db.all<Post[]>('SELECT * FROM posts')
+    // return this.db.query<Post[]>('SELECT * FROM posts')
+    return this.db.query("SELECT * FROM posts")
+
+    
+    // return this.db.query<Post[]>("SELECT * FROM posts", (err, res) => {
+    //     if (err) reject(err)
+    //     else resolve(res)
+    //   })
   }
   async createPost(post: Post): Promise<void>{
-    await this.db.run('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
+    // await this.db.query('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
+    return console.log('dddd')
   }
   getPost(id: string): Promise<Post | undefined>{
     return Promise.resolve(this.posts.find(p => p.id === id));

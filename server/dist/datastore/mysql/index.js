@@ -12,30 +12,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SqlDataStore = void 0;
-const sqlite_1 = require("sqlite");
-const sqlite3_1 = __importDefault(require("sqlite3"));
-const path_1 = __importDefault(require("path"));
-class SqlDataStore {
+exports.MysqlDataStore = void 0;
+const mysql2_1 = __importDefault(require("mysql2"));
+class MysqlDataStore {
     constructor() {
         this.users = [];
         this.posts = [];
         this.comments = [];
         this.likes = [];
     }
-    openDb(dbPath) {
+    openDb() {
         return __awaiter(this, void 0, void 0, function* () {
-            // open the database
-            this.db = yield (0, sqlite_1.open)({
-                filename: dbPath,
-                driver: sqlite3_1.default.Database,
-                mode: sqlite3_1.default.OPEN_READWRITE,
+            // const mysql = require('mysql');
+            this.db = mysql2_1.default.createConnection({
+                host: 'localhost',
+                user: 'root',
+                password: '123456',
+                database: 'codersquare'
             });
-            this.db.run('PRAGMA foreign_keys = ON;');
-            yield this.db.migrate({
-                migrationsPath: path_1.default.join(__dirname, 'migrations'),
+            this.db.connect((err) => {
+                if (err)
+                    throw err;
+                console.log('Connected to MySQL Server!');
             });
-            return this;
         });
     }
     createUser(user) {
@@ -50,11 +49,17 @@ class SqlDataStore {
         return Promise.resolve(this.users.find(u => u.userName === userName));
     }
     listPosts() {
-        return this.db.all('SELECT * FROM posts');
+        // return this.db.query<Post[]>('SELECT * FROM posts')
+        return this.db.query("SELECT * FROM posts");
+        // return this.db.query<Post[]>("SELECT * FROM posts", (err, res) => {
+        //     if (err) reject(err)
+        //     else resolve(res)
+        //   })
     }
     createPost(post) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)', post.id, post.title, post.url, post.postedAt, post.userId);
+            // await this.db.query('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
+            return console.log('dddd');
         });
     }
     getPost(id) {
@@ -88,4 +93,4 @@ class SqlDataStore {
         return Promise.resolve();
     }
 }
-exports.SqlDataStore = SqlDataStore;
+exports.MysqlDataStore = MysqlDataStore;

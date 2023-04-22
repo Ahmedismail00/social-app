@@ -5,7 +5,7 @@ import {listPostsHandler,createPostHandler,getPostHandler,deletePostHandler} fro
 import {initDb} from './datastore'
 
 (async ()=>{
-  await initDb('/datastore/sql/codersquare.sqlite')
+  await initDb('datastore/sql/codersquare.sqlite')
   
   const app = express();
 

@@ -17,7 +17,7 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const postHandler_1 = require("./handlers/postHandler");
 const datastore_1 = require("./datastore");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, datastore_1.initDb)('/datastore/sql/codersquare.sqlite');
+    yield (0, datastore_1.initDb)('datastore/sql/codersquare.sqlite');
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     const requestLoggerMiddleware = (req, res, next) => {
