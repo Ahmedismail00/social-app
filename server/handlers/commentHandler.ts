@@ -38,7 +38,7 @@ export const deleteCommentHandler: ExpressHandler<DeleteCommentRequest,DeleteCom
     
     const id: string = req.body.id
     const deleteResponese = await db.deleteComment(id)
-    res.send(' done')
+    res.sendStatus(200)
 }
 
 

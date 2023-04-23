@@ -45,8 +45,14 @@ class MysqlDataStore {
     getUserByEmail(email) {
         return Promise.resolve(this.users.find(u => u.email === email));
     }
+    getUserById(id) {
+        return Promise.resolve(this.users.find(u => u.id === id));
+    }
     getUserByUsername(userName) {
         return Promise.resolve(this.users.find(u => u.userName === userName));
+    }
+    listUsers() {
+        return Promise.resolve(this.users);
     }
     listPosts() {
         // return this.db.query<Post[]>('SELECT * FROM posts')

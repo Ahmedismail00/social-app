@@ -35,8 +35,14 @@ export class MysqlDataStore implements DataStore{
   getUserByEmail(email: string): Promise<User | undefined>{
     return Promise.resolve(this.users.find(u => u.email === email))
   }
+  getUserById(id: string): Promise<User | undefined>{
+    return Promise.resolve(this.users.find(u => u.id === id))
+  }
   getUserByUsername(userName: string): Promise<User | undefined>{
     return Promise.resolve(this.users.find(u => u.userName === userName))
+  }
+  listUsers(): Promise<User[]>{
+    return Promise.resolve(this.users);
   }
   
   listPosts(): Promise<Post[]>{

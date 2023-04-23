@@ -9,9 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listUsersHandler = void 0;
+exports.authMiddleware = void 0;
+const auth_1 = require("../auth");
 const datastore_1 = require("../datastore");
-const listUsersHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send({ users: yield datastore_1.db.listUsers() });
+const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+    if (!token) {
+        return res.sendStatus(401);
+    }
+    try {
+        const payload = (0, auth_1.verifyJwt)(token);
+        const user = yield datastore_1.db.getUserById(payload.userId);
+        if (!user) {
+            throw 'not found';
+        }
+        next();
+    }
+    catch (error) {
+        return res.status(401).send({ error: "Bad token" });
+    }
 });
-exports.listUsersHandler = listUsersHandler;
+exports.authMiddleware = authMiddleware;

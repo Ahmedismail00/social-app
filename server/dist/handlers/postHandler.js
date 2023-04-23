@@ -48,6 +48,6 @@ const deletePostHandler = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     const postId = req.body.id;
     const deleteResponese = yield datastore_1.db.deletePost(postId);
-    res.send(' done');
+    res.sendStatus(200);
 });
 exports.deletePostHandler = deletePostHandler;

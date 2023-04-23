@@ -44,6 +44,6 @@ const deleteCommentHandler = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
     const id = req.body.id;
     const deleteResponese = yield datastore_1.db.deleteComment(id);
-    res.send(' done');
+    res.sendStatus(200);
 });
 exports.deleteCommentHandler = deleteCommentHandler;

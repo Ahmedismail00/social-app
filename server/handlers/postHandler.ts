@@ -45,7 +45,7 @@ export const deletePostHandler: ExpressHandler<DeletePostRequest,DeletePostRespo
     const postId: string = req.body.id
     const deleteResponese = await db.deletePost(postId)
     
-    res.send(' done')
+    res.sendStatus(200)
 }
 
 

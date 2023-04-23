@@ -46,8 +46,14 @@ class SqlDataStore {
     getUserByEmail(email) {
         return this.db.get(`SELECT * FROM users WHERE users.email = ?`, email);
     }
+    getUserById(id) {
+        return Promise.resolve(this.users.find(u => u.id === id));
+    }
     getUserByUsername(userName) {
         return this.db.get(`SELECT * FROM users WHERE users.username = ?`, userName);
+    }
+    listUsers() {
+        return Promise.resolve(this.users);
     }
     listPosts() {
         return this.db.all('SELECT * FROM posts');
