@@ -24,6 +24,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         if (!user) {
             throw 'not found';
         }
+        res.locals.userId = user.id;
         next();
     }
     catch (error) {

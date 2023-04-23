@@ -10,7 +10,7 @@ export const listPostsHandler: ExpressHandler<ListPostsRequest,ListPostsResponse
 
 export const createPostHandler: ExpressHandler<CreatePostRequest,CreatePostResponse> = async (req,res) => {
   
-  if(!req.body.title || !req.body.url || !req.body.userId){
+  if(!req.body.title || !req.body.url){
     return res.sendStatus(400);
   }
   
@@ -19,7 +19,7 @@ export const createPostHandler: ExpressHandler<CreatePostRequest,CreatePostRespo
     postedAt : Date.now(),
     title : req.body.title,
     url : req.body.url,
-    userId : req.body.userId,
+    userId : res.locals.userId,
   }
   
   await db.createPost(post)

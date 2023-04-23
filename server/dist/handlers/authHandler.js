@@ -25,7 +25,7 @@ const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     if (existing) {
         return res.status(403).send({ error: 'User already exists' });
     }
-    const passwordHash = crypto_1.default.pbkdf2Sync(password, process.env.PASSWORD_SALT, 42, 64, 'sha512').toString('hex');
+    const passwordHash = hashPassword(password);
     const user = {
         id: crypto_1.default.randomUUID(),
         userName: userName,
@@ -45,7 +45,8 @@ const signInHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.sendStatus(400);
     }
     const existing = (yield datastore_1.db.getUserByEmail(login)) || (yield datastore_1.db.getUserByUsername(login));
-    if (!existing || existing.password != password) {
+    const passwordHash = hashPassword(password);
+    if (!existing || existing.password != passwordHash) {
         return res.sendStatus(403);
     }
     const jwt = (0, auth_1.signJwt)({ userId: existing.id });
@@ -59,3 +60,6 @@ const signInHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     });
 });
 exports.signInHandler = signInHandler;
+function hashPassword(password) {
+    return crypto_1.default.pbkdf2Sync(password, process.env.PASSWORD_SALT, 42, 64, 'sha512').toString('hex');
+}

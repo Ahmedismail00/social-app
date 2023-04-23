@@ -20,7 +20,7 @@ const listPostsHandler = (req, res) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.listPostsHandler = listPostsHandler;
 const createPostHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.title || !req.body.url || !req.body.userId) {
+    if (!req.body.title || !req.body.url) {
         return res.sendStatus(400);
     }
     const post = {
@@ -28,7 +28,7 @@ const createPostHandler = (req, res) => __awaiter(void 0, void 0, void 0, functi
         postedAt: Date.now(),
         title: req.body.title,
         url: req.body.url,
-        userId: req.body.userId,
+        userId: res.locals.userId,
     };
     yield datastore_1.db.createPost(post);
     res.sendStatus(200);
