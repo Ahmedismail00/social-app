@@ -28,6 +28,10 @@ const errorMiddleware_1 = require("./middleware/errorMiddleware");
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     app.use(loggerMiddleware_1.requestLoggerMiddleware);
+    // public
+    app.get('/healthz', (req, res) => {
+        res.send({ status: "ok" });
+    });
     app.post('/v1/signup', (0, express_async_handler_1.default)(authHandler_1.signUpHandler));
     app.post('/v1/signin', (0, express_async_handler_1.default)(authHandler_1.signInHandler));
     app.use(authMiddleware_1.authMiddleware);
@@ -37,5 +41,5 @@ const errorMiddleware_1 = require("./middleware/errorMiddleware");
     app.post('/v1/delete-post', (0, express_async_handler_1.default)(postHandler_1.deletePostHandler));
     app.get('/v1/users', (0, express_async_handler_1.default)(userHandler_1.listUsersHandler));
     app.use(errorMiddleware_1.errHandler);
-    app.listen(3000);
+    app.listen(process.env.APP_PORT || 3000);
 }))();
