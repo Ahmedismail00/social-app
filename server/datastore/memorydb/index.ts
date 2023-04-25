@@ -1,39 +1,39 @@
 import {DataStore} from "../"
-import {User, Post, Like, Comment} from "../../types";
+import {IUser,IPost,ILike,IComment} from '../../interfaces';
 
 export class InMemoryDataStore implements DataStore{
   
   
-  private users: User[] = [];
-  private posts: Post[] = [];
-  private comments: Comment[] = [];
-  private likes: Like[] = [];
+  private users: IUser[] = [];
+  private posts: IPost[] = [];
+  private comments: IComment[] = [];
+  private likes: ILike[] = [];
   
-  createUser(user: User): Promise<void>{
+  createUser(user: IUser): Promise<void>{
     this.users.push(user);
     return Promise.resolve();
   };
-  getUserByEmail(email: string): Promise<User | undefined>{
+  getUserByEmail(email: string): Promise<IUser | undefined>{
     return Promise.resolve(this.users.find(u => u.email === email))
   }
-  getUserById(id: string): Promise<User | undefined>{
+  getUserById(id: string): Promise<IUser | undefined>{
     return Promise.resolve(this.users.find(u => u.id === id))
   }
-  getUserByUsername(userName: string): Promise<User | undefined>{
-    return Promise.resolve(this.users.find(u => u.userName === userName))
+  getUserByUsername(username: string): Promise<IUser | undefined>{
+    return Promise.resolve(this.users.find(u => u.username === username))
   }
-  listUsers(): Promise<User[]>{
+  listUsers(): Promise<IUser[]>{
     return Promise.resolve(this.users);
   }
   
-  listPosts(): Promise<Post[]>{
+  listPosts(): Promise<IPost[]>{
     return Promise.resolve(this.posts);
   }
-  createPost(post: Post): Promise<void>{
+  createPost(post: IPost): Promise<void>{
     this.posts.push(post)
     return Promise.resolve();
   }
-  getPost(id: string): Promise<Post | undefined>{
+  getPost(id: string): Promise<IPost | undefined>{
     return Promise.resolve(this.posts.find(p => p.id === id));
   }
   deletePost(id: string): Promise<void> {
@@ -45,15 +45,15 @@ export class InMemoryDataStore implements DataStore{
     return Promise.resolve();
   }
   
-  createLike(like: Like): Promise<void>{
+  createLike(like: ILike): Promise<void>{
     this.likes.push(like)
     return Promise.resolve();
   }
   
-  listComments(postId: string): Promise<Comment[]>{
+  listComments(postId: string): Promise<IComment[]>{
     return Promise.resolve(this.comments);
   }
-  createComment(comment: Comment): Promise<void>{
+  createComment(comment: IComment): Promise<void>{
     this.comments.push(comment)
     return Promise.resolve();
   }

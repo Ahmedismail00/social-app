@@ -16,5 +16,5 @@ export let db:DataStore;
 export async function initDb(dbPath?:string) {
   // db = await new SqlDataStore().openDb(dbPath);
   //db = await new InMemoryDataStore();
-  db = await new MongoDataStore();
+  db = new MongoDataStore();
 }

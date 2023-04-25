@@ -1,9 +1,10 @@
-import {Comment} from "../../types";
+import {IComment} from '../../interfaces';
+
 
 export interface CommentDao{
   
-  createComment(comment: Comment): Promise<void>
-  listComments(postId: string): Promise<Comment[]>
+  createComment(comment: IComment): Promise<void>
+  listComments(postId: string): Promise<IComment[]>
   deleteComment(id: string): Promise<void>
   
 }

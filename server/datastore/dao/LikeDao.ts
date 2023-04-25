@@ -1,6 +1,7 @@
-import {Like} from "../../types";
+import {ILike} from '../../interfaces';
+
 
 export interface LikeDao{
   
-  createLike(like: Like): Promise<void>
+  createLike(like: ILike): Promise<void>
 }

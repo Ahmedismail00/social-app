@@ -1,9 +1,9 @@
-import {Post} from "../../types";
+import {IPost} from "../../interfaces";
 
 export interface PostDao{
   
-  listPosts(): Promise<Post[]>
-  createPost(post: Post): Promise<void>
-  getPost(id: string): Promise<Post | undefined>
+  listPosts(): Promise<IPost[]>
+  createPost(post: IPost): Promise<void>
+  getPost(id: string): Promise<IPost | undefined>
   deletePost(id: string): Promise<void>
 }

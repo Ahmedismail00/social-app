@@ -1,7 +1,7 @@
 import {OkPacket, RowDataPacket} from "mysql2";
 import mysql from "mysql2";
 import {DataStore} from "..";
-import {User, Post, Like, Comment} from "../../types";
+import {IUser,IPost,ILike,IComment} from '../../interfaces';
 
 export class MysqlDataStore implements DataStore{
   private db!:any;
@@ -23,43 +23,43 @@ export class MysqlDataStore implements DataStore{
   
   
   
-  private users: User[] = [];
-  private posts: Post[] = [];
-  private comments: Comment[] = [];
-  private likes: Like[] = [];
+  private users: IUser[] = [];
+  private posts: IPost[] = [];
+  private comments: IComment[] = [];
+  private likes: ILike[] = [];
   
-  createUser(user: User): Promise<void>{
+  createUser(user: IUser): Promise<void>{
     this.users.push(user);
     return Promise.resolve();
   };
-  getUserByEmail(email: string): Promise<User | undefined>{
+  getUserByEmail(email: string): Promise<IUser | undefined>{
     return Promise.resolve(this.users.find(u => u.email === email))
   }
-  getUserById(id: string): Promise<User | undefined>{
+  getUserById(id: string): Promise<IUser | undefined>{
     return Promise.resolve(this.users.find(u => u.id === id))
   }
-  getUserByUsername(userName: string): Promise<User | undefined>{
-    return Promise.resolve(this.users.find(u => u.userName === userName))
+  getUserByUsername(username: string): Promise<IUser | undefined>{
+    return Promise.resolve(this.users.find(u => u.username === username))
   }
-  listUsers(): Promise<User[]>{
+  listUsers(): Promise<IUser[]>{
     return Promise.resolve(this.users);
   }
   
-  listPosts(): Promise<Post[]>{
-    // return this.db.query<Post[]>('SELECT * FROM posts')
+  listPosts(): Promise<IPost[]>{
+    // return this.db.query<IPost[]>('SELECT * FROM posts')
     return this.db.query("SELECT * FROM posts")
 
     
-    // return this.db.query<Post[]>("SELECT * FROM posts", (err, res) => {
+    // return this.db.query<IPost[]>("SELECT * FROM posts", (err, res) => {
     //     if (err) reject(err)
     //     else resolve(res)
     //   })
   }
-  async createPost(post: Post): Promise<void>{
+  async createPost(post: IPost): Promise<void>{
     // await this.db.query('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
     return console.log('dddd')
   }
-  getPost(id: string): Promise<Post | undefined>{
+  getPost(id: string): Promise<IPost | undefined>{
     return Promise.resolve(this.posts.find(p => p.id === id));
   }
   deletePost(id: string): Promise<void> {
@@ -71,15 +71,15 @@ export class MysqlDataStore implements DataStore{
     return Promise.resolve();
   }
   
-  createLike(like: Like): Promise<void>{
+  createLike(like: ILike): Promise<void>{
     this.likes.push(like)
     return Promise.resolve();
   }
   
-  listComments(postId: string): Promise<Comment[]>{
+  listComments(postId: string): Promise<IComment[]>{
     return Promise.resolve(this.comments);
   }
-  createComment(comment: Comment): Promise<void>{
+  createComment(comment: IComment): Promise<void>{
     this.comments.push(comment)
     return Promise.resolve();
   }

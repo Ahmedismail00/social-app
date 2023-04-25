@@ -40,7 +40,7 @@ class SqlDataStore {
     }
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`, user.id, user.email, user.password, user.userName);
+            yield this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`, user.id, user.email, user.password, user.username);
         });
     }
     getUserByEmail(email) {
@@ -49,8 +49,8 @@ class SqlDataStore {
     getUserById(id) {
         return Promise.resolve(this.users.find(u => u.id === id));
     }
-    getUserByUsername(userName) {
-        return this.db.get(`SELECT * FROM users WHERE users.username = ?`, userName);
+    getUserByUsername(username) {
+        return this.db.get(`SELECT * FROM users WHERE users.username = ?`, username);
     }
     listUsers() {
         return Promise.resolve(this.users);

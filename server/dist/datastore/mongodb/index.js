@@ -8,63 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoDataStore = void 0;
-const mongoose_1 = __importDefault(require("mongoose"));
-const config_1 = __importDefault(require("../../config/config"));
+const models_1 = require("../../models");
 class MongoDataStore {
     constructor() {
+        // private db!:any;
+        // public async openDb() {
+        //   mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
+        //   .then(() => {
+        //       console.log(`Running on ENV = ${process.env.NODE_ENV}`);
+        //       console.log('Connected to mongoDB.');
+        //   })
+        //   .catch((error) => {
+        //       console.log('Unable to connect.');
+        //       console.log(error);
+        //   });
+        // }
         this.users = [];
         this.posts = [];
         this.comments = [];
         this.likes = [];
     }
-    openDb() {
-        return __awaiter(this, void 0, void 0, function* () {
-            mongoose_1.default.connect(config_1.default.mongo.url, { retryWrites: true, w: 'majority' })
-                .then(() => {
-                console.log(`Running on ENV = ${process.env.NODE_ENV}`);
-                console.log('Connected to mongoDB.');
-            })
-                .catch((error) => {
-                console.log('Unable to connect.');
-                console.log(error);
-            });
-        });
-    }
     createUser(user) {
         this.users.push(user);
         return Promise.resolve();
     }
-    ;
     getUserByEmail(email) {
         return Promise.resolve(this.users.find(u => u.email === email));
     }
     getUserById(id) {
         return Promise.resolve(this.users.find(u => u.id === id));
     }
-    getUserByUsername(userName) {
-        return Promise.resolve(this.users.find(u => u.userName === userName));
+    getUserByUsername(username) {
+        return Promise.resolve(this.users.find(u => u.username === username));
     }
     listUsers() {
-        return Promise.resolve(this.users);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield models_1.User.find();
+        });
     }
     listPosts() {
-        // return this.db.query<Post[]>('SELECT * FROM posts')
-        return this.db.query("SELECT * FROM posts");
-        // return this.db.query<Post[]>("SELECT * FROM posts", (err, res) => {
-        //     if (err) reject(err)
-        //     else resolve(res)
-        //   })
+        return Promise.resolve(this.posts);
     }
     createPost(post) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // await this.db.query('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
-            return console.log('dddd');
-        });
+        this.posts.push(post);
+        return Promise.resolve();
     }
     getPost(id) {
         return Promise.resolve(this.posts.find(p => p.id === id));

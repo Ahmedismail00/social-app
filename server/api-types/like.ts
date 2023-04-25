@@ -1,4 +1,4 @@
-import {Like} from "../types"
+import {ILike} from "../interfaces"
 
-export interface CreateLikeRequest extends Like{}
+export interface CreateLikeRequest extends ILike{}
 export interface CreateLikeResponse{}

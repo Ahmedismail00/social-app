@@ -14,17 +14,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const authMiddleware_1 = require("./middleware/authMiddleware");
+const authMiddleware_1 = require("./middlewares/authMiddleware");
 const postHandler_1 = require("./handlers/postHandler");
 const authHandler_1 = require("./handlers/authHandler");
 const userHandler_1 = require("./handlers/userHandler");
 const datastore_1 = require("./datastore");
-const loggerMiddleware_1 = require("./middleware/loggerMiddleware");
-const errorMiddleware_1 = require("./middleware/errorMiddleware");
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, datastore_1.initDb)();
-    dotenv_1.default.config();
+const loggerMiddleware_1 = require("./middlewares/loggerMiddleware");
+const errorMiddleware_1 = require("./middlewares/errorMiddleware");
+const mongoose_1 = __importDefault(require("mongoose"));
+const config_1 = __importDefault(require("./config/config"));
+// initDb()
+mongoose_1.default.connect(config_1.default.mongo.url, { retryWrites: true, w: 'majority' })
+    .then(() => {
+    console.log(`Running on ENV = ${process.env.NODE_ENV}`);
+    console.log('Connected to mongoDB.');
+    startServer();
+})
+    .catch((error) => {
+    console.log('Unable to connect.');
+    console.log(error);
+    process.exit(1);
+});
+const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+    (0, datastore_1.initDb)();
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     app.use(loggerMiddleware_1.requestLoggerMiddleware);
@@ -42,4 +54,4 @@ const errorMiddleware_1 = require("./middleware/errorMiddleware");
     app.get('/v1/users', (0, express_async_handler_1.default)(userHandler_1.listUsersHandler));
     app.use(errorMiddleware_1.errHandler);
     app.listen(process.env.APP_PORT || 3000);
-}))();
+});

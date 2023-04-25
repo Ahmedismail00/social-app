@@ -16,7 +16,7 @@ function initDb(dbPath) {
     return __awaiter(this, void 0, void 0, function* () {
         // db = await new SqlDataStore().openDb(dbPath);
         //db = await new InMemoryDataStore();
-        exports.db = yield new mongodb_1.MongoDataStore();
+        exports.db = new mongodb_1.MongoDataStore();
     });
 }
 exports.initDb = initDb;

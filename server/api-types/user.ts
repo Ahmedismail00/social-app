@@ -1,8 +1,7 @@
-import {User} from '../types'; 
+import {IUser} from '../interfaces'; 
 
-// User APIs  
 
-export type SignUpRequest = Pick<User, 'userName'| 'email'| 'password'>
+export type SignUpRequest = Pick<IUser, 'firstName'|'lastName'|'username'| 'email'| 'password'>
 export interface SignUpResponse{
   jwt:string
 }
@@ -14,11 +13,11 @@ export interface SignInRequest{
 
 export type SignInResponse = 
 {
-  user: Pick<User, 'email'|'userName'|'id'>,
+  user: Pick<IUser, 'email'|'username'|'id'>,
   jwt: string
 }
 
 export interface ListUsersRequest{}
 export interface ListUsersResponse{
-  users: User[]
+  users: IUser[]
 }

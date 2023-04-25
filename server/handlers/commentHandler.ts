@@ -1,5 +1,6 @@
 import {db} from '../datastore';
-import {Comment,ExpressHandler} from '../types';
+import {ExpressHandler} from '../types';
+import {IComment} from '../interfaces';
 import crypto from 'crypto'
 import {CreateCommentRequest,CreateCommentResponse,ListCommentsRequest,ListCommentsResponse,DeleteCommentRequest,DeleteCommentResponse} from '../api-types/comment';
 
@@ -19,7 +20,7 @@ export const createCommentHandler: ExpressHandler<CreateCommentRequest,CreateCom
     return res.sendStatus(400);
   }
   
-  const comment: Comment = {
+  const comment: IComment = {
     id : crypto.randomUUID(),
     comment: req.body.comment,
     postId : req.body.postId,

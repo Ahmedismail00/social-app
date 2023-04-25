@@ -17,26 +17,29 @@ const datastore_1 = require("../datastore");
 const crypto_1 = __importDefault(require("crypto"));
 const auth_1 = require("../auth");
 const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, userName, password } = req.body;
-    if (!email || !userName || !password) {
+    const { firstName, lastName, username, email, password } = req.body;
+    if (!firstName || !lastName || !username || !email || !password) {
         return res.sendStatus(400).send({ error: 'All fields are required' });
     }
-    const existing = (yield datastore_1.db.getUserByEmail(email)) || (yield datastore_1.db.getUserByUsername(userName));
+    const existing = (yield datastore_1.db.getUserByEmail(email)) || (yield datastore_1.db.getUserByUsername(username));
     if (existing) {
         return res.status(403).send({ error: 'User already exists' });
     }
     const passwordHash = hashPassword(password);
     const user = {
         id: crypto_1.default.randomUUID(),
-        userName: userName,
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
         email: email,
         password: passwordHash,
     };
     yield datastore_1.db.createUser(user);
     const jwt = (0, auth_1.signJwt)({ userId: user.id });
-    return res.sendStatus(200).send({
-        jwt
-    });
+    //return res.status(200).json({
+    //   jwt
+    // });
+    return res.sendStatus(200);
 });
 exports.signUpHandler = signUpHandler;
 const signInHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -47,13 +50,13 @@ const signInHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const existing = (yield datastore_1.db.getUserByEmail(login)) || (yield datastore_1.db.getUserByUsername(login));
     const passwordHash = hashPassword(password);
     if (!existing || existing.password != passwordHash) {
-        return res.sendStatus(403);
+        return res.status(403).send({ error: "User is not existing" });
     }
     const jwt = (0, auth_1.signJwt)({ userId: existing.id });
-    return res.send({
+    return res.json({
         user: {
             email: existing.email,
-            userName: existing.userName,
+            username: existing.username,
             id: existing.id
         },
         jwt

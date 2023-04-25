@@ -1,16 +1,16 @@
-import {Post} from '../types'; 
+import {IPost} from '../interfaces'; 
 
 // Post APIs
 export interface ListPostsRequest {}
 export interface ListPostsResponse {
-  posts:Post[]
+  posts:IPost[]
 }
 
-export type CreatePostRequest = Pick<Post, 'title'|'url'>
+export type CreatePostRequest = Pick<IPost, 'title'|'url'>
 export interface CreatePostResponse{}
 
 export interface GetPostRequest{}
-export interface GetPostResponse{post: Post}
+export interface GetPostResponse{post: IPost}
 
-export type DeletePostRequest = Pick<Post,'id'>
+export type DeletePostRequest = Pick<IPost,'id'>
 export interface DeletePostResponse{}

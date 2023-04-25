@@ -19,8 +19,8 @@ class InMemoryDataStore {
     getUserById(id) {
         return Promise.resolve(this.users.find(u => u.id === id));
     }
-    getUserByUsername(userName) {
-        return Promise.resolve(this.users.find(u => u.userName === userName));
+    getUserByUsername(username) {
+        return Promise.resolve(this.users.find(u => u.username === username));
     }
     listUsers() {
         return Promise.resolve(this.users);

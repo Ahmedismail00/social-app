@@ -2,7 +2,7 @@ import { Database, open as sqliteOpen } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import path from "path";
 import {DataStore} from "..";
-import {User, Post, Like, Comment} from "../../types";
+import {IUser,IPost,ILike,IComment} from '../../interfaces';
 
 export class SqlDataStore implements DataStore{
   private db!: Database<sqlite3.Database, sqlite3.Statement>;
@@ -24,40 +24,40 @@ export class SqlDataStore implements DataStore{
     return this;
   }
   
-  private users: User[] = [];
-  private posts: Post[] = [];
-  private comments: Comment[] = [];
-  private likes: Like[] = [];
+  private users: IUser[] = [];
+  private posts: IPost[] = [];
+  private comments: IComment[] = [];
+  private likes: ILike[] = [];
   
-  async createUser(user: User): Promise<void>{
+  async createUser(user: IUser): Promise<void>{
     await this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`,
       user.id,
       user.email,
       user.password,
-      user.userName
+      user.username
     );
   }
     
-  getUserByEmail(email: string): Promise<User | undefined>{
-    return this.db.get<User>(`SELECT * FROM users WHERE users.email = ?` , email)
+  getUserByEmail(email: string): Promise<IUser | undefined>{
+    return this.db.get<IUser>(`SELECT * FROM users WHERE users.email = ?` , email)
   }
-  getUserById(id: string): Promise<User | undefined>{
+  getUserById(id: string): Promise<IUser | undefined>{
     return Promise.resolve(this.users.find(u => u.id === id))
   }
-  getUserByUsername(userName: string): Promise<User | undefined>{
-    return this.db.get<User>(`SELECT * FROM users WHERE users.username = ?` , userName)
+  getUserByUsername(username: string): Promise<IUser | undefined>{
+    return this.db.get<IUser>(`SELECT * FROM users WHERE users.username = ?` , username)
   }
-  listUsers(): Promise<User[]>{
+  listUsers(): Promise<IUser[]>{
     return Promise.resolve(this.users);
   }
   
-  listPosts(): Promise<Post[]>{
-    return this.db.all<Post[]>('SELECT * FROM posts')
+  listPosts(): Promise<IPost[]>{
+    return this.db.all<IPost[]>('SELECT * FROM posts')
   }
-  async createPost(post: Post): Promise<void>{
+  async createPost(post: IPost): Promise<void>{
     await this.db.run('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
   }
-  getPost(id: string): Promise<Post | undefined>{
+  getPost(id: string): Promise<IPost | undefined>{
     return Promise.resolve(this.posts.find(p => p.id === id));
   }
   deletePost(id: string): Promise<void> {
@@ -69,15 +69,15 @@ export class SqlDataStore implements DataStore{
     return Promise.resolve();
   }
   
-  createLike(like: Like): Promise<void>{
+  createLike(like: ILike): Promise<void>{
     this.likes.push(like)
     return Promise.resolve();
   }
   
-  listComments(postId: string): Promise<Comment[]>{
+  listComments(postId: string): Promise<IComment[]>{
     return Promise.resolve(this.comments);
   }
-  createComment(comment: Comment): Promise<void>{
+  createComment(comment: IComment): Promise<void>{
     this.comments.push(comment)
     return Promise.resolve();
   }

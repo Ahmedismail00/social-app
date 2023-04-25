@@ -1,13 +1,13 @@
-import {Comment} from '../types'; 
+import {IComment} from '../interfaces'; 
 
 // Comments APIs
-export type ListCommentsRequest = Pick<Comment,'postId'>
+export type ListCommentsRequest = Pick<IComment,'postId'>
 export interface ListCommentsResponse{
-  comments:Comment[]
+  comments: IComment[]
 }
 
-export type CreateCommentRequest = Pick<Comment,'postId' | 'comment' | 'userId'>
+export type CreateCommentRequest = Pick<IComment,'postId' | 'comment' | 'userId'>
 export interface CreateCommentResponse{}
 
-export type DeleteCommentRequest = Pick<Comment,'id'>
+export type DeleteCommentRequest = Pick<IComment,'id'>
 export interface DeleteCommentResponse{}

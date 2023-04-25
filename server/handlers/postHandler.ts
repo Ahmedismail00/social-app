@@ -1,5 +1,6 @@
 import {db} from '../datastore';
-import {Post,ExpressHandler} from '../types';
+import {ExpressHandler} from '../types';
+import {IPost} from '../interfaces';
 import crypto from 'crypto'
 import {CreatePostRequest,CreatePostResponse,ListPostsRequest,ListPostsResponse,DeletePostRequest,DeletePostResponse,GetPostRequest,GetPostResponse} from '../api-types/post';
 
@@ -14,7 +15,7 @@ export const createPostHandler: ExpressHandler<CreatePostRequest,CreatePostRespo
     return res.sendStatus(400);
   }
   
-  const post: Post = {
+  const post: IPost = {
     id : crypto.randomUUID(),
     postedAt : Date.now(),
     title : req.body.title,
@@ -32,7 +33,7 @@ export const getPostHandler: ExpressHandler<GetPostRequest,GetPostResponse> = as
       return res.sendStatus(400);
     }
     
-    const post: Post | undefined = await db.getPost(req.query.userId)
+    const post: IPost | undefined = await db.getPost(req.query.userId)
     res.send({post: post})
 }
 

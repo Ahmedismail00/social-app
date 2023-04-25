@@ -48,16 +48,16 @@ class MysqlDataStore {
     getUserById(id) {
         return Promise.resolve(this.users.find(u => u.id === id));
     }
-    getUserByUsername(userName) {
-        return Promise.resolve(this.users.find(u => u.userName === userName));
+    getUserByUsername(username) {
+        return Promise.resolve(this.users.find(u => u.username === username));
     }
     listUsers() {
         return Promise.resolve(this.users);
     }
     listPosts() {
-        // return this.db.query<Post[]>('SELECT * FROM posts')
+        // return this.db.query<IPost[]>('SELECT * FROM posts')
         return this.db.query("SELECT * FROM posts");
-        // return this.db.query<Post[]>("SELECT * FROM posts", (err, res) => {
+        // return this.db.query<IPost[]>("SELECT * FROM posts", (err, res) => {
         //     if (err) reject(err)
         //     else resolve(res)
         //   })

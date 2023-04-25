@@ -1,5 +1,6 @@
 import {db} from '../datastore';
-import {Like, ExpressHandler} from '../types';
+import {ExpressHandler} from '../types';
+import {ILike} from '../interfaces';
 import {CreateLikeRequest,CreateLikeResponse} from '../api-types/like';
 
 export const createLikeHanlder : ExpressHandler<CreateLikeRequest,CreateLikeResponse> = async (req,res) =>{
@@ -7,7 +8,7 @@ export const createLikeHanlder : ExpressHandler<CreateLikeRequest,CreateLikeResp
   if(!req.body.postId || !req.body.userId){
     return res.sendStatus(400)
   }
-  const like: Like = {
+  const like: ILike = {
     userId : req.body.userId,
     postId : req.body.postId
   }

@@ -1,5 +1,6 @@
 import {db} from '../datastore';
-import {User,ExpressHandler} from '../types';
+import {ExpressHandler} from '../types';
+import {IUser} from '../interfaces';
 import crypto from 'crypto'
 import {ListUsersRequest,ListUsersResponse} from '../api-types/user';
 
