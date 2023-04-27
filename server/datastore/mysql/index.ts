@@ -2,6 +2,8 @@ import {OkPacket, RowDataPacket} from "mysql2";
 import mysql from "mysql2";
 import {DataStore} from "..";
 import {IUser,IPost,ILike,IComment} from '../../interfaces';
+import {GetUserType} from "../../types/user";
+import {signJwt} from '../../auth';
 
 export class MysqlDataStore implements DataStore{
   private db!:any;
@@ -9,10 +11,10 @@ export class MysqlDataStore implements DataStore{
   public async openDb() {
     // const mysql = require('mysql');
     this.db = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '123456',
-      database: 'codersquare'
+      host: process.env.MYSQL_HOST,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE
     });
    
     this.db.connect((err:any) => {
@@ -28,17 +30,19 @@ export class MysqlDataStore implements DataStore{
   private comments: IComment[] = [];
   private likes: ILike[] = [];
   
-  createUser(user: IUser): Promise<void>{
+  async createUser(user: IUser): Promise<string>{
+    user.id = crypto.randomUUID();
+    const jwt = await signJwt({userId: user.id});
     this.users.push(user);
-    return Promise.resolve();
+    return Promise.resolve(jwt);
   };
-  getUserByEmail(email: string): Promise<IUser | undefined>{
+  getUserByEmail(email: string): Promise<GetUserType>{
     return Promise.resolve(this.users.find(u => u.email === email))
   }
-  getUserById(id: string): Promise<IUser | undefined>{
+  getUserById(id: string): Promise<GetUserType>{
     return Promise.resolve(this.users.find(u => u.id === id))
   }
-  getUserByUsername(username: string): Promise<IUser | undefined>{
+  getUserByUsername(username: string): Promise<GetUserType>{
     return Promise.resolve(this.users.find(u => u.username === username))
   }
   listUsers(): Promise<IUser[]>{

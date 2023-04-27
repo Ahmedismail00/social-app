@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MysqlDataStore = void 0;
 const mysql2_1 = __importDefault(require("mysql2"));
+const auth_1 = require("../../auth");
 class MysqlDataStore {
     constructor() {
         this.users = [];
@@ -25,10 +26,10 @@ class MysqlDataStore {
         return __awaiter(this, void 0, void 0, function* () {
             // const mysql = require('mysql');
             this.db = mysql2_1.default.createConnection({
-                host: 'localhost',
-                user: 'root',
-                password: '123456',
-                database: 'codersquare'
+                host: process.env.MYSQL_HOST,
+                user: process.env.MYSQL_USER,
+                password: process.env.MYSQL_PASSWORD,
+                database: process.env.MYSQL_DATABASE
             });
             this.db.connect((err) => {
                 if (err)
@@ -38,8 +39,12 @@ class MysqlDataStore {
         });
     }
     createUser(user) {
-        this.users.push(user);
-        return Promise.resolve();
+        return __awaiter(this, void 0, void 0, function* () {
+            user.id = crypto.randomUUID();
+            const jwt = yield (0, auth_1.signJwt)({ userId: user.id });
+            this.users.push(user);
+            return Promise.resolve(jwt);
+        });
     }
     ;
     getUserByEmail(email) {

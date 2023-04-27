@@ -1,8 +1,11 @@
 import mongoose from 'mongoose';
 import {DataStore} from "..";
 import {IUser,IPost,ILike,IComment} from '../../interfaces';
-import {User, IUserModel} from "../../models"
+import {User} from "./models";
+import {GetUserType} from "../../types/user";
 import config from '../../config/config';
+import crypto from 'crypto';
+import {signJwt} from '../../auth';
 
 export class MongoDataStore implements DataStore{
   // private db!:any;
@@ -25,19 +28,20 @@ export class MongoDataStore implements DataStore{
   private comments: IComment[] = [];
   private likes: ILike[] = [];
   
-  createUser(user: IUser): Promise<void>{
-    this.users.push(user);
-    return Promise.resolve();
+  async createUser(user: IUser): Promise<string>{
+    const createdUser = await User.create(user)
+    const jwt = await signJwt({userId: createdUser.id});
+    return Promise.resolve(createdUser.id);
   }
   
-  getUserByEmail(email: string): Promise<IUser | undefined>{
-    return Promise.resolve(this.users.find(u => u.email === email))
+  async getUserByEmail(email: string): Promise<GetUserType>{
+    return await User.findOne({email});
   }
-  getUserById(id: string): Promise<IUser | IUserModel | undefined>{
-    return Promise.resolve(this.users.find(u => u.id === id))
+  async getUserById(id: string): Promise<GetUserType>{
+    return await User.findById(id);
   }
-  getUserByUsername(username: string): Promise<IUser | undefined>{
-    return Promise.resolve(this.users.find(u => u.username === username))
+  async getUserByUsername(username: string): Promise<GetUserType>{
+    return await User.findOne({username});
   }
   
   async listUsers(): Promise<IUser[]>{

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InMemoryDataStore = void 0;
+const auth_1 = require("../../auth");
 class InMemoryDataStore {
     constructor() {
         this.users = [];
@@ -9,8 +10,10 @@ class InMemoryDataStore {
         this.likes = [];
     }
     createUser(user) {
+        user.id = crypto.randomUUID();
+        const jwt = (0, auth_1.signJwt)({ userId: user.id });
         this.users.push(user);
-        return Promise.resolve();
+        return Promise.resolve(jwt);
     }
     ;
     getUserByEmail(email) {

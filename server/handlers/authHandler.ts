@@ -10,7 +10,7 @@ export const signUpHandler: ExpressHandler<SignUpRequest,SignUpResponse> = async
   
   const {firstName,lastName,username,email,password} = req.body
   if(!firstName || !lastName|| !username || !email  || !password){
-    return res.sendStatus(400).send({error: 'All fields are required'});
+    return res.status(400).send({error: 'All fields are required'});
   }
   
   const existing = await db.getUserByEmail(email) || await db.getUserByUsername(username)
@@ -21,7 +21,6 @@ export const signUpHandler: ExpressHandler<SignUpRequest,SignUpResponse> = async
   const passwordHash = hashPassword(password)
   
   const user: IUser = {
-    id : crypto.randomUUID(),
     firstName: firstName,
     lastName: lastName,
     username: username,
@@ -29,12 +28,11 @@ export const signUpHandler: ExpressHandler<SignUpRequest,SignUpResponse> = async
     password : passwordHash,
   }
   
-  await db.createUser(user)
-  const jwt = signJwt({userId: user.id});
- //return res.status(200).json({
- //   jwt
- // });
-  return res.sendStatus(200)
+  const jwt = await db.createUser(user)
+  
+ return res.status(200).json({
+    jwt
+  });
 }
 
 export const signInHandler: ExpressHandler<SignInRequest,SignInResponse> = async (req,res) => {
@@ -47,11 +45,11 @@ export const signInHandler: ExpressHandler<SignInRequest,SignInResponse> = async
   const passwordHash = hashPassword(password)
   
   
-  if (!existing || existing.password != passwordHash){
+  if (!existing || !existing.id || existing.password != passwordHash){
     return res.status(403).send({error:"User is not existing"})
   }
   
-  const jwt = signJwt({userId: existing.id})
+  const jwt = await signJwt({userId: existing.id})
   
   return res.json({
     user: {

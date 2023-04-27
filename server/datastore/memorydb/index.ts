@@ -1,5 +1,7 @@
 import {DataStore} from "../"
 import {IUser,IPost,ILike,IComment} from '../../interfaces';
+import {GetUserType} from "../../types/user";
+import {signJwt} from '../../auth';
 
 export class InMemoryDataStore implements DataStore{
   
@@ -9,17 +11,19 @@ export class InMemoryDataStore implements DataStore{
   private comments: IComment[] = [];
   private likes: ILike[] = [];
   
-  createUser(user: IUser): Promise<void>{
+  createUser(user: IUser): Promise<string>{
+    user.id = crypto.randomUUID();
+    const jwt = signJwt({userId: user.id});
     this.users.push(user);
-    return Promise.resolve();
+    return Promise.resolve(jwt);
   };
-  getUserByEmail(email: string): Promise<IUser | undefined>{
+  getUserByEmail(email: string): Promise<GetUserType>{
     return Promise.resolve(this.users.find(u => u.email === email))
   }
-  getUserById(id: string): Promise<IUser | undefined>{
+  getUserById(id: string): Promise<GetUserType>{
     return Promise.resolve(this.users.find(u => u.id === id))
   }
-  getUserByUsername(username: string): Promise<IUser | undefined>{
+  getUserByUsername(username: string): Promise<GetUserType>{
     return Promise.resolve(this.users.find(u => u.username === username))
   }
   listUsers(): Promise<IUser[]>{

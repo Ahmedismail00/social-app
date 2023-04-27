@@ -3,6 +3,8 @@ import sqlite3 from 'sqlite3';
 import path from "path";
 import {DataStore} from "..";
 import {IUser,IPost,ILike,IComment} from '../../interfaces';
+import {GetUserType} from "../../types/user";
+import {signJwt} from '../../auth';
 
 export class SqlDataStore implements DataStore{
   private db!: Database<sqlite3.Database, sqlite3.Statement>;
@@ -29,22 +31,26 @@ export class SqlDataStore implements DataStore{
   private comments: IComment[] = [];
   private likes: ILike[] = [];
   
-  async createUser(user: IUser): Promise<void>{
-    await this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`,
-      user.id,
-      user.email,
-      user.password,
-      user.username
-    );
+  async createUser(user: IUser): Promise<string>{
+    // await this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`,
+    //   user.id,
+    //   user.email,
+    //   user.password,
+    //   user.username
+    // );
+    user.id = crypto.randomUUID();
+    const jwt = await signJwt({userId: user.id});
+    this.users.push(user);
+    return Promise.resolve(jwt);
   }
     
-  getUserByEmail(email: string): Promise<IUser | undefined>{
+  getUserByEmail(email: string): Promise<GetUserType>{
     return this.db.get<IUser>(`SELECT * FROM users WHERE users.email = ?` , email)
   }
-  getUserById(id: string): Promise<IUser | undefined>{
+  getUserById(id: string): Promise<GetUserType>{
     return Promise.resolve(this.users.find(u => u.id === id))
   }
-  getUserByUsername(username: string): Promise<IUser | undefined>{
+  getUserByUsername(username: string): Promise<GetUserType>{
     return this.db.get<IUser>(`SELECT * FROM users WHERE users.username = ?` , username)
   }
   listUsers(): Promise<IUser[]>{

@@ -19,7 +19,7 @@ const auth_1 = require("../auth");
 const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { firstName, lastName, username, email, password } = req.body;
     if (!firstName || !lastName || !username || !email || !password) {
-        return res.sendStatus(400).send({ error: 'All fields are required' });
+        return res.status(400).send({ error: 'All fields are required' });
     }
     const existing = (yield datastore_1.db.getUserByEmail(email)) || (yield datastore_1.db.getUserByUsername(username));
     if (existing) {
@@ -27,19 +27,16 @@ const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     const passwordHash = hashPassword(password);
     const user = {
-        id: crypto_1.default.randomUUID(),
         firstName: firstName,
         lastName: lastName,
         username: username,
         email: email,
         password: passwordHash,
     };
-    yield datastore_1.db.createUser(user);
-    const jwt = (0, auth_1.signJwt)({ userId: user.id });
-    //return res.status(200).json({
-    //   jwt
-    // });
-    return res.sendStatus(200);
+    const jwt = yield datastore_1.db.createUser(user);
+    return res.status(200).json({
+        jwt
+    });
 });
 exports.signUpHandler = signUpHandler;
 const signInHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,10 +46,10 @@ const signInHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     const existing = (yield datastore_1.db.getUserByEmail(login)) || (yield datastore_1.db.getUserByUsername(login));
     const passwordHash = hashPassword(password);
-    if (!existing || existing.password != passwordHash) {
+    if (!existing || !existing.id || existing.password != passwordHash) {
         return res.status(403).send({ error: "User is not existing" });
     }
-    const jwt = (0, auth_1.signJwt)({ userId: existing.id });
+    const jwt = yield (0, auth_1.signJwt)({ userId: existing.id });
     return res.json({
         user: {
             email: existing.email,

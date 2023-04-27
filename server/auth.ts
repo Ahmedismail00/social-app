@@ -2,8 +2,8 @@ import {JwtObject} from './types';
 import jwt from 'jsonwebtoken';
 
 
-export function signJwt(obj:JwtObject):string {
-  return jwt.sign(obj,getJwtSecret(),{
+export function signJwt(payload:JwtObject):string {
+  return jwt.sign(payload,getJwtSecret(),{
     expiresIn: '15d' 
   });
 }

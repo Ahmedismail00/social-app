@@ -1,11 +1,10 @@
-import {IUser} from "../../interfaces";
-import {IUserModel} from "../../models";
+import {IUser,IUserModel} from "../../interfaces";
+import {GetUserType} from "../../types/user";
 
 export interface UserDao{
-  
-  createUser(user: IUser): Promise<void>;
-  getUserById(id: string): Promise<IUser | undefined>;
-  getUserByEmail(email: string): Promise<IUser | undefined>;
-  getUserByUsername(username: string): Promise<IUser | undefined>;
+  createUser(user: IUser): Promise<string>;
+  getUserById(id: string): Promise<GetUserType>;
+  getUserByEmail(email: string): Promise<GetUserType>;
+  getUserByUsername(username: string): Promise<GetUserType>;
   listUsers(): Promise<IUser[]> | undefined;
 }

@@ -16,6 +16,7 @@ exports.SqlDataStore = void 0;
 const sqlite_1 = require("sqlite");
 const sqlite3_1 = __importDefault(require("sqlite3"));
 const path_1 = __importDefault(require("path"));
+const auth_1 = require("../../auth");
 class SqlDataStore {
     constructor() {
         this.users = [];
@@ -40,7 +41,16 @@ class SqlDataStore {
     }
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`, user.id, user.email, user.password, user.username);
+            // await this.db.run(`INSERT INTO users (id,email,password,username) VALUES (?,?,?,?)`,
+            //   user.id,
+            //   user.email,
+            //   user.password,
+            //   user.username
+            // );
+            user.id = crypto.randomUUID();
+            const jwt = yield (0, auth_1.signJwt)({ userId: user.id });
+            this.users.push(user);
+            return Promise.resolve(jwt);
         });
     }
     getUserByEmail(email) {

@@ -1,7 +1,7 @@
 import {db} from '../datastore';
 import {ExpressHandler} from '../types';
 import {IPost} from '../interfaces';
-import crypto from 'crypto'
+import crypto from 'crypto';
 import {CreatePostRequest,CreatePostResponse,ListPostsRequest,ListPostsResponse,DeletePostRequest,DeletePostResponse,GetPostRequest,GetPostResponse} from '../api-types/post';
 
 

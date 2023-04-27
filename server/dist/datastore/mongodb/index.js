@@ -10,7 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoDataStore = void 0;
-const models_1 = require("../../models");
+const models_1 = require("./models");
+const auth_1 = require("../../auth");
 class MongoDataStore {
     constructor() {
         // private db!:any;
@@ -31,17 +32,26 @@ class MongoDataStore {
         this.likes = [];
     }
     createUser(user) {
-        this.users.push(user);
-        return Promise.resolve();
+        return __awaiter(this, void 0, void 0, function* () {
+            const createdUser = yield models_1.User.create(user);
+            const jwt = yield (0, auth_1.signJwt)({ userId: createdUser.id });
+            return Promise.resolve(jwt);
+        });
     }
     getUserByEmail(email) {
-        return Promise.resolve(this.users.find(u => u.email === email));
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield models_1.User.findOne({ email });
+        });
     }
     getUserById(id) {
-        return Promise.resolve(this.users.find(u => u.id === id));
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield models_1.User.findOne({ id });
+        });
     }
     getUserByUsername(username) {
-        return Promise.resolve(this.users.find(u => u.username === username));
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield models_1.User.findOne({ username });
+        });
     }
     listUsers() {
         return __awaiter(this, void 0, void 0, function* () {

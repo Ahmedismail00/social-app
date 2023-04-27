@@ -46,12 +46,12 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     app.post('/v1/signup', (0, express_async_handler_1.default)(authHandler_1.signUpHandler));
     app.post('/v1/signin', (0, express_async_handler_1.default)(authHandler_1.signInHandler));
+    app.get('/v1/users', (0, express_async_handler_1.default)(userHandler_1.listUsersHandler));
     app.use(authMiddleware_1.authMiddleware);
     app.get('/v1/posts', (0, express_async_handler_1.default)(postHandler_1.listPostsHandler));
     app.get('/v1/post', (0, express_async_handler_1.default)(postHandler_1.getPostHandler));
     app.post('/v1/post', (0, express_async_handler_1.default)(postHandler_1.createPostHandler));
     app.post('/v1/delete-post', (0, express_async_handler_1.default)(postHandler_1.deletePostHandler));
-    app.get('/v1/users', (0, express_async_handler_1.default)(userHandler_1.listUsersHandler));
     app.use(errorMiddleware_1.errHandler);
     app.listen(process.env.APP_PORT || 3000);
 });

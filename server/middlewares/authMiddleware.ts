@@ -1,6 +1,9 @@
 import {ExpressHandler} from "../types";
 import {verifyJwt} from "../auth";
 import {db} from "../datastore";
+
+
+
 export const authMiddleware: ExpressHandler<any,any> = async (req,res,next)=> {
   const token = req.headers.authorization?.split(' ')[1];
   if(!token){
@@ -8,16 +11,15 @@ export const authMiddleware: ExpressHandler<any,any> = async (req,res,next)=> {
   }
   
   try {
-    const payload = verifyJwt(token)  
+    const payload = verifyJwt(token) 
     const user = await db.getUserById(payload.userId)
     if(!user){
       return res.sendStatus(401);
     }
-    
     res.locals.userId = user.id;
     next()
     
   } catch (error) {
-    return res.status(401).send({error:"Bad token"})
+    return res.status(401).send({error})
   }
 }

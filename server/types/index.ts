@@ -12,3 +12,4 @@ export type ExpressHandler<Req, Res> = RequestHandler<
 export interface JwtObject{
   userId: string
 }
+
