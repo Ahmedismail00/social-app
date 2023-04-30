@@ -28,7 +28,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         next();
     }
     catch (error) {
-        return res.status(401).send({ error: "Bad token" });
+        return res.status(401).send({ error: "bad token" });
     }
 });
 exports.authMiddleware = authMiddleware;

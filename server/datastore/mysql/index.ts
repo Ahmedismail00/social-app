@@ -1,8 +1,8 @@
 import {OkPacket, RowDataPacket} from "mysql2";
 import mysql from "mysql2";
 import {DataStore} from "..";
-import {IUser,IPost,ILike,IComment} from '../../interfaces';
-import {GetUserType} from "../../types/user";
+import {IUser,IPost,ILike,IComment,IPostDoc} from '../../interfaces';
+import {GetUserType,GetPostType} from "../../types";
 import {signJwt} from '../../auth';
 
 export class MysqlDataStore implements DataStore{
@@ -63,7 +63,7 @@ export class MysqlDataStore implements DataStore{
     // await this.db.query('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
     return console.log('dddd')
   }
-  getPost(id: string): Promise<IPost | undefined>{
+  getPost(id: string): Promise<GetPostType>{
     return Promise.resolve(this.posts.find(p => p.id === id));
   }
   deletePost(id: string): Promise<void> {

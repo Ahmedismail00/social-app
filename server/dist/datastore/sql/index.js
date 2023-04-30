@@ -70,7 +70,7 @@ class SqlDataStore {
     }
     createPost(post) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)', post.id, post.title, post.url, post.postedAt, post.userId);
+            yield this.db.run('INSERT INTO posts () VALUES (title,url,userId)', post.title, post.url, post.userId);
         });
     }
     getPost(id) {

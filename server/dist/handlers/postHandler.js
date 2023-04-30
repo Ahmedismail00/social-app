@@ -8,13 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePostHandler = exports.getPostHandler = exports.createPostHandler = exports.listPostsHandler = void 0;
 const datastore_1 = require("../datastore");
-const crypto_1 = __importDefault(require("crypto"));
 const listPostsHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send({ posts: yield datastore_1.db.listPosts() });
 });
@@ -24,8 +20,6 @@ const createPostHandler = (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.sendStatus(400);
     }
     const post = {
-        id: crypto_1.default.randomUUID(),
-        postedAt: Date.now(),
         title: req.body.title,
         url: req.body.url,
         userId: res.locals.userId,
@@ -39,7 +33,7 @@ const getPostHandler = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.sendStatus(400);
     }
     const post = yield datastore_1.db.getPost(req.query.userId);
-    res.send({ post: post });
+    res.send({ post });
 });
 exports.getPostHandler = getPostHandler;
 const deletePostHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

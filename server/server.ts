@@ -5,6 +5,7 @@ import {authMiddleware} from "./middlewares/authMiddleware"
 import {listPostsHandler,createPostHandler,getPostHandler,deletePostHandler} from './handlers/postHandler';
 import {signUpHandler,signInHandler} from './handlers/authHandler';
 import {listUsersHandler} from './handlers/userHandler';
+import {createCommentHandler} from './handlers/commentHandler';
 import {initDb} from './datastore';
 import {requestLoggerMiddleware} from './middlewares/loggerMiddleware';
 import {errHandler} from './middlewares/errorMiddleware';
@@ -49,6 +50,8 @@ const startServer = async ()=>{
   app.get('/v1/post',asyncHandler(getPostHandler))
   app.post('/v1/post',asyncHandler(createPostHandler))
   app.post('/v1/delete-post',asyncHandler(deletePostHandler))
+  
+  app.post('/v1/comment',asyncHandler(createCommentHandler))
   
   
   app.use(errHandler)

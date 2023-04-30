@@ -20,6 +20,6 @@ export const authMiddleware: ExpressHandler<any,any> = async (req,res,next)=> {
     next()
     
   } catch (error) {
-    return res.status(401).send({error})
+    return res.status(401).send({error: "bad token"})
   }
 }

@@ -2,7 +2,7 @@ import {db} from '../datastore';
 import {ExpressHandler} from '../types';
 import {IUser} from '../interfaces';
 import crypto from 'crypto'
-import {SignUpRequest,SignUpResponse,SignInRequest,SignInResponse} from '../api-types/user';
+import {SignUpRequest,SignUpResponse,SignInRequest,SignInResponse} from '../api-types/auth';
 import {signJwt, verifyJwt} from '../auth'
 
 

@@ -13,28 +13,22 @@ exports.MongoDataStore = void 0;
 const models_1 = require("./models");
 const auth_1 = require("../../auth");
 class MongoDataStore {
-    constructor() {
-        // private db!:any;
-        // public async openDb() {
-        //   mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
-        //   .then(() => {
-        //       console.log(`Running on ENV = ${process.env.NODE_ENV}`);
-        //       console.log('Connected to mongoDB.');
-        //   })
-        //   .catch((error) => {
-        //       console.log('Unable to connect.');
-        //       console.log(error);
-        //   });
-        // }
-        this.users = [];
-        this.posts = [];
-        this.comments = [];
-        this.likes = [];
-    }
+    // private db!:any;
+    // public async openDb() {
+    //   mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
+    //   .then(() => {
+    //       console.log(`Running on ENV = ${process.env.NODE_ENV}`);
+    //       console.log('Connected to mongoDB.');
+    //   })
+    //   .catch((error) => {
+    //       console.log('Unable to connect.');
+    //       console.log(error);
+    //   });
+    // }
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const createdUser = yield models_1.User.create(user);
-            const jwt = yield (0, auth_1.signJwt)({ userId: createdUser.id });
+            const jwt = yield (0, auth_1.signJwt)({ userId: createdUser._id });
             return Promise.resolve(jwt);
         });
     }
@@ -45,7 +39,7 @@ class MongoDataStore {
     }
     getUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield models_1.User.findOne({ id });
+            return yield models_1.User.findById(id);
         });
     }
     getUserByUsername(username) {
@@ -55,45 +49,53 @@ class MongoDataStore {
     }
     listUsers() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield models_1.User.find();
+            return yield models_1.User.find().populate('posts');
         });
     }
     listPosts() {
-        return Promise.resolve(this.posts);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield models_1.Post.find();
+        });
     }
     createPost(post) {
-        this.posts.push(post);
-        return Promise.resolve();
+        return __awaiter(this, void 0, void 0, function* () {
+            yield models_1.Post.create(post);
+            return Promise.resolve();
+        });
     }
     getPost(id) {
-        return Promise.resolve(this.posts.find(p => p.id === id));
+        return __awaiter(this, void 0, void 0, function* () {
+            return Promise.resolve(yield models_1.Post.findById(id));
+        });
     }
     deletePost(id) {
-        const index = this.posts.findIndex(p => p.id === id);
-        if (index === -1) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield models_1.Post.deleteOne({ _id: id });
             return Promise.resolve();
-        }
-        this.posts.splice(index, 1);
-        return Promise.resolve();
+        });
     }
     createLike(like) {
-        this.likes.push(like);
-        return Promise.resolve();
+        return __awaiter(this, void 0, void 0, function* () {
+            yield models_1.Like.create(like);
+            return Promise.resolve();
+        });
     }
     listComments(postId) {
-        return Promise.resolve(this.comments);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield models_1.Comment.find();
+        });
     }
     createComment(comment) {
-        this.comments.push(comment);
-        return Promise.resolve();
+        return __awaiter(this, void 0, void 0, function* () {
+            yield models_1.Comment.create(comment);
+            return Promise.resolve();
+        });
     }
     deleteComment(id) {
-        const index = this.comments.findIndex(c => c.id === id);
-        if (index === -1) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield models_1.Comment.deleteOne({ _id: id });
             return Promise.resolve();
-        }
-        this.comments.splice(index, 11);
-        return Promise.resolve();
+        });
     }
 }
 exports.MongoDataStore = MongoDataStore;

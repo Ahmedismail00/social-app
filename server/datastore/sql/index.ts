@@ -2,8 +2,8 @@ import { Database, open as sqliteOpen } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import path from "path";
 import {DataStore} from "..";
-import {IUser,IPost,ILike,IComment} from '../../interfaces';
-import {GetUserType} from "../../types/user";
+import {IUser,IPost,IPostDoc,ILike,IComment} from '../../interfaces';
+import {GetUserType,GetPostType} from "../../types";
 import {signJwt} from '../../auth';
 
 export class SqlDataStore implements DataStore{
@@ -61,9 +61,9 @@ export class SqlDataStore implements DataStore{
     return this.db.all<IPost[]>('SELECT * FROM posts')
   }
   async createPost(post: IPost): Promise<void>{
-    await this.db.run('INSERT INTO posts () VALUES (id,title,url,postedAt,userId)',post.id,post.title,post.url,post.postedAt,post.userId)
+    await this.db.run('INSERT INTO posts () VALUES (title,url,userId)',post.title,post.url,post.userId)
   }
-  getPost(id: string): Promise<IPost | undefined>{
+  getPost(id: string): Promise<GetPostType>{
     return Promise.resolve(this.posts.find(p => p.id === id));
   }
   deletePost(id: string): Promise<void> {

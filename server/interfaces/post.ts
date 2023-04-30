@@ -1,8 +1,13 @@
+import mongoose, { Document } from 'mongoose';
+
 export interface IPost {
-  id: string;
+  id?: string;
   title: string;
   url: string;
   userId: string;
-  postedAt: number;
-  liked?: boolean;
+}
+
+
+export interface IPostDoc extends IPost, Document {
+  id?: string;
 }

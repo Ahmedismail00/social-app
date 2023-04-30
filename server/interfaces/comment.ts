@@ -1,8 +1,12 @@
+import mongoose, { Document } from 'mongoose';
+
 export interface IComment {
-  id: string;
+  id?: string;
   userId: string;
   postId: string;
   comment: string;
-  postedAt: number;
-  liked?: boolean;
+}
+
+export interface ICommentDoc extends IComment, Document{
+  id?: string;
 }

@@ -1,4 +1,6 @@
 import { RequestHandler } from 'express';
+import {GetUserType} from "./user"
+import {GetPostType} from "./post"
 
 type WithError<T> = T & {error: string};
 
@@ -13,3 +15,7 @@ export interface JwtObject{
   userId: string
 }
 
+export {
+  GetUserType,
+  GetPostType
+}

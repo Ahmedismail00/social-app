@@ -16,16 +16,14 @@ export const listCommentsHandler: ExpressHandler<ListCommentsRequest,ListComment
 
 export const createCommentHandler: ExpressHandler<CreateCommentRequest,CreateCommentResponse> = async (req,res) => {
   
-  if(!req.body.postId || !req.body.comment || !req.body.userId){
+  if(!req.body.postId || !req.body.comment){
     return res.sendStatus(400);
   }
   
   const comment: IComment = {
-    id : crypto.randomUUID(),
     comment: req.body.comment,
     postId : req.body.postId,
-    userId : req.body.userId,
-    postedAt : Date.now(),
+    userId : res.locals.userId,
   }
   
   await db.createComment(comment)

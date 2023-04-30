@@ -1,4 +1,4 @@
-import {IUser,IUserModel} from "../../interfaces";
+import {IUser} from "../../interfaces";
 import {GetUserType} from "../../types/user";
 
 export interface UserDao{

@@ -10,6 +10,6 @@ export interface IUser {
 }
  
  
-export interface IUserModel extends IUser, Document {
+export interface IUserDoc extends IUser, Document {
   id?: string;
 }

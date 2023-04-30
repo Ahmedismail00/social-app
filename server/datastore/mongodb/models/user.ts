@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import {IUser,IUserModel} from '../../../interfaces';
+import {IUser,IUserDoc} from '../../../interfaces';
 
 
 const UserSchema: Schema = new Schema(
@@ -27,8 +27,12 @@ const UserSchema: Schema = new Schema(
       required: true,
       min: 8
     },
+    posts:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post"
+    }]
   },
   {timestamps: true}
   );
 
-export default mongoose.model<IUserModel>('User',UserSchema);
+export default mongoose.model<IUserDoc>('User',UserSchema);

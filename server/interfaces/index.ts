@@ -1,13 +1,16 @@
-import {IUser,IUserModel} from './user';
-import {IPost} from './post';
-import {ILike} from './like';
-import {IComment} from './comment';
+import {IUser,IUserDoc} from './user';
+import {IPost,IPostDoc} from './post';
+import {IComment,ICommentDoc} from './comment';
+import {ILike,ILikeDoc} from './like';
 
 
 export {
   IUser,
-  IUserModel,
+  IUserDoc,
   IPost,
-  ILike,
+  IPostDoc,
   IComment,
+  ICommentDoc,
+  ILike,
+  ILikeDoc
 }
