@@ -29,10 +29,10 @@ const createPostHandler = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.createPostHandler = createPostHandler;
 const getPostHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.query.userId) {
+    if (!req.query.postId) {
         return res.sendStatus(400);
     }
-    const post = yield datastore_1.db.getPost(req.query.userId);
+    const post = yield datastore_1.db.getPost(req.query.postId);
     res.send({ post });
 });
 exports.getPostHandler = getPostHandler;

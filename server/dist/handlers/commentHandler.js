@@ -20,7 +20,7 @@ const listCommentsHandler = (req, res) => __awaiter(void 0, void 0, void 0, func
 });
 exports.listCommentsHandler = listCommentsHandler;
 const createCommentHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.postId || !req.body.comment || !req.body.userId) {
+    if (!req.body.postId || !req.body.comment) {
         return res.sendStatus(400);
     }
     const comment = {

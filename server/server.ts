@@ -1,19 +1,14 @@
-import express,{RequestHandler,ErrorRequestHandler} from 'express';
-import asyncHandler from 'express-async-handler';
+import express,{Application, RequestHandler,ErrorRequestHandler} from 'express';
 import dotenv from 'dotenv';
-import {authMiddleware} from "./middlewares/authMiddleware"
-import {listPostsHandler,createPostHandler,getPostHandler,deletePostHandler} from './handlers/postHandler';
-import {signUpHandler,signInHandler} from './handlers/authHandler';
-import {listUsersHandler} from './handlers/userHandler';
-import {createCommentHandler} from './handlers/commentHandler';
 import {initDb} from './datastore';
-import {requestLoggerMiddleware} from './middlewares/loggerMiddleware';
-import {errHandler} from './middlewares/errorMiddleware';
 import mongoose from 'mongoose';
 import config from './config/config';
-
+import helmet from "helmet";
+import compression from "compression";
+import cors from "cors";
+import {requestLoggerMiddleware,errHandler} from './middlewares';
+import router from "./routes";
 // initDb()
-
 mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
   .then(() => {
       console.log(`Running on ENV = ${process.env.NODE_ENV}`);
@@ -28,31 +23,27 @@ mongoose.connect(config.mongo.url, { retryWrites: true, w: 'majority' })
 });
 
 const startServer = async ()=>{
+  // init database object
   initDb();
-  const app = express();
+  
+  const app: Application = express();
+  
+  // Helmet is used to secure this app by configuring the http-header
+  app.use(helmet());
 
+  // compression is used to compresss res
+  app.use(compression());
+  
+  // cors prevents other websites or domains from accessing your web resources directly from the browser.
+  app.use(cors())
+  
+  // parse url encoded request body
   app.use(express.json());
   
   app.use(requestLoggerMiddleware);
   
-  // public
-  app.get('/healthz',(req,res)=>{
-    res.send({status:"ok"})
-  })
-  
-  app.post('/v1/signup',asyncHandler(signUpHandler))
-  app.post('/v1/signin',asyncHandler(signInHandler))
-  
-  app.use(authMiddleware);
-  app.get('/v1/users',asyncHandler(listUsersHandler))
-  
-  app.get('/v1/posts',asyncHandler(listPostsHandler))
-  app.get('/v1/post',asyncHandler(getPostHandler))
-  app.post('/v1/post',asyncHandler(createPostHandler))
-  app.post('/v1/delete-post',asyncHandler(deletePostHandler))
-  
-  app.post('/v1/comment',asyncHandler(createCommentHandler))
-  
+  // routes
+  app.use(router)
   
   app.use(errHandler)
   

@@ -54,7 +54,7 @@ class MongoDataStore {
     }
     listPosts() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield models_1.Post.find();
+            return yield models_1.Post.find().populate("comments");
         });
     }
     createPost(post) {

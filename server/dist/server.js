@@ -13,17 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const express_async_handler_1 = __importDefault(require("express-async-handler"));
-const authMiddleware_1 = require("./middlewares/authMiddleware");
-const postHandler_1 = require("./handlers/postHandler");
-const authHandler_1 = require("./handlers/authHandler");
-const userHandler_1 = require("./handlers/userHandler");
-const commentHandler_1 = require("./handlers/commentHandler");
 const datastore_1 = require("./datastore");
-const loggerMiddleware_1 = require("./middlewares/loggerMiddleware");
-const errorMiddleware_1 = require("./middlewares/errorMiddleware");
 const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = __importDefault(require("./config/config"));
+const helmet_1 = __importDefault(require("helmet"));
+const compression_1 = __importDefault(require("compression"));
+const cors_1 = __importDefault(require("cors"));
+const middlewares_1 = require("./middlewares");
+const routes_1 = __importDefault(require("./routes"));
 // initDb()
 mongoose_1.default.connect(config_1.default.mongo.url, { retryWrites: true, w: 'majority' })
     .then(() => {
@@ -37,23 +34,20 @@ mongoose_1.default.connect(config_1.default.mongo.url, { retryWrites: true, w: '
     process.exit(1);
 });
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+    // init database object
     (0, datastore_1.initDb)();
     const app = (0, express_1.default)();
+    // Helmet is used to secure this app by configuring the http-header
+    app.use((0, helmet_1.default)());
+    // compression is used to compresss res
+    app.use((0, compression_1.default)());
+    // cors prevents other websites or domains from accessing your web resources directly from the browser.
+    app.use((0, cors_1.default)());
+    // parse url encoded request body
     app.use(express_1.default.json());
-    app.use(loggerMiddleware_1.requestLoggerMiddleware);
-    // public
-    app.get('/healthz', (req, res) => {
-        res.send({ status: "ok" });
-    });
-    app.post('/v1/signup', (0, express_async_handler_1.default)(authHandler_1.signUpHandler));
-    app.post('/v1/signin', (0, express_async_handler_1.default)(authHandler_1.signInHandler));
-    app.use(authMiddleware_1.authMiddleware);
-    app.get('/v1/users', (0, express_async_handler_1.default)(userHandler_1.listUsersHandler));
-    app.get('/v1/posts', (0, express_async_handler_1.default)(postHandler_1.listPostsHandler));
-    app.get('/v1/post', (0, express_async_handler_1.default)(postHandler_1.getPostHandler));
-    app.post('/v1/post', (0, express_async_handler_1.default)(postHandler_1.createPostHandler));
-    app.post('/v1/delete-post', (0, express_async_handler_1.default)(postHandler_1.deletePostHandler));
-    app.post('/v1/comment', (0, express_async_handler_1.default)(commentHandler_1.createCommentHandler));
-    app.use(errorMiddleware_1.errHandler);
+    app.use(middlewares_1.requestLoggerMiddleware);
+    // routes
+    app.use(routes_1.default);
+    app.use(middlewares_1.errHandler);
     app.listen(process.env.APP_PORT || 3000);
 });
